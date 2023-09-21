@@ -28,7 +28,7 @@ char *cap_string(char *s)
 				s[i] = s[i] - 32;
 			else if (s[p] == 59)
 				s[i] = s[i] - 32;
-			else if (s[p] == 123 || s[prev] == 125)
+			else if (s[p] == 123 || s[p] == 125)
 				s[i] = s[i] - 32;
 		}
 	}
