@@ -1,10 +1,11 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * string_toupper - changes all lowercase letters of a string
  * to uppercase
  * @s: input string.
- * Return: the pointer to dest.
+ * Return: string array.
  */
 
 char *string_toupper(char *s)
@@ -17,5 +18,5 @@ char *string_toupper(char *s)
 			s[u] = s[u] - 32;
 	}
 
-	return (u);
+	return (s);
 }
