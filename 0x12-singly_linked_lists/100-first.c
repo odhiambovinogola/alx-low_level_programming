@@ -1,14 +1,11 @@
 #include <stdio.h>
 
 /**
- * primary - Print before the main function.
- *
- * Return: void
+ * custom_constructor - function executed before main
+ * Return: no return.
  */
-
-__attribute__((constructor))
-void primary(void)
+void __attribute__ ((constructor)) custom_constructor()
 {
-	printf("You're beat! and yet, you must allow,\n");
-	printf("bore my house upon my back!\n");
+	printf("You're beat! and yet, you must allow");
+	printf(",\nI bore my house upon my back!\n");
 }
