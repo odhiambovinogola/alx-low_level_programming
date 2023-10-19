@@ -6,7 +6,8 @@
  * Return: void
  */
 
-__attribute__((constructor))
+void __attribute__((constructor)) primary(void);
+
 void primary(void)
 {
 	printf("You're beat! and yet, you must allow,\n");
