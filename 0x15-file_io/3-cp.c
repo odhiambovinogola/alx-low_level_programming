@@ -1,55 +1,67 @@
 #include "main.h"
 
 /**
- * handle_error - handles errors for cp program
- * @exit_code: exit code
- * @message: error message format
- * @args: variable argument list
+ * error_handler - handles the errors
+ * @exit_code: the exit code
+ * @message: the error message
+ * @type: the data type for format
  */
 
-void handle_error(int exit_code, const char *message, va_list args)
+void error_handler(int exit_code, char *message, char type, ...)
 {
-	dprintf(STDERR_FILENO, message, va_arg(args, const char *));
+	va_list args;
+
+	va_start(args, type);
+	if (type == 's')
+		dprintf(STDERR_FILENO, message, va_arg(args, char *));
+	else if (type == 'd')
+		dprintf(STDERR_FILENO, message, va_arg(args, int));
+	else if (type == 'N')
+		dprintf(STDERR_FILENO, message, "");
+	else
+		dprintf(STDERR_FILENO, "Error: Does not match any type\n");
+
+	va_end(args);
 	exit(exit_code);
 }
 
 /**
- * main - copies the content of a file to another file
+ * main - copies contents of a file to another file
  * @argc: number of arguments
  * @argv: array of arguments
- * Return: 0 on success, otherwise exit codes for errors
+ * Return:  0
  */
 
 int main(int argc, char *argv[])
 {
 	char buffer[1024];
-	int source_fd, dest_fd;
+	int fd_s, fd_d;
 	ssize_t bytes_read, bytes_written;
 
 	if (argc != 3)
-		handle_error(97, "Usage: cp file_from file_to\n", 0);
+		error_handler(97, "Usage: cp file_from file_to\n", 'N');
 
-	source_fd = open(argv[1], O_RDONLY);
-	if (source_fd == -1)
-		handle_error(98, "Error: Can't read from file %s\n", argv[1]);
+	fd_s = open(argv[1], O_RDONLY);
+	if (fd_s == -1)
+		error_handler(98, "Error: Can't read from file %s\n", 's', argv[1]);
 
-	dest_fd = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	if (dest_fd == -1)
-		handle_error(99, "Error: Can't write to %s\n", argv[2]);
+	fd_d = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (fd_d == -1)
+		error_handler(99, "Error: Can't write to %s\n", 's', argv[2]);
 
-	while ((bytes_read = read(source_fd, buffer, 1024)) > 0)
+	while ((bytes_read = read(fd_s, buffer, 1024)) > 0)
 	{
-		bytes_written = write(dest_fd, buffer, bytes_read);
+		bytes_written = write(fd_d, buffer, bytes_read);
 		if (bytes_written == -1)
-		handle_error(99, "Error: Can't write to %s\n", argv[2]);
+			error_handler(99, "Error: Can't write to %s\n", 's', argv[2]);
 	}
 
 	if (bytes_read == -1)
-		handle_error(98, "Error: Can't read from file %s\n", argv[1]);
-	if (close(source_fd) == -1)
-		handle_error(100, "Error: Can't close fd %d\n", source_fd);
-	if (close(dest_fd) == -1)
-		handle_error(100, "Error: Can't close fd %d\n", dest_fd);
+		error_handler(98, "Error: Can't read from file %s\n", 's', argv[1]);
+	if (close(fd_s) == -1)
+		error_handler(100, "Error: Can't close fd %d\n", 'd', fd_s);
+	if (close(fd_d) == -1)
+		error_handler(100, "Error: Can't close fd %d\n", 'd', fd_d);
 
 	return (0);
 }
