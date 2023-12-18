@@ -1,9 +1,4 @@
 #include "main.h"
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
 
 /**
  * read_textfile - reads a text file and prints it to the POSIX standard output
@@ -21,25 +16,21 @@ ssize_t read_textfile(const char *filename, size_t letters)
 
 	if (filename == NULL)
 		return (0);
+
 	fd = open(filename, O_RDONLY);
-	if (fd == -1)
+
+	if (fd == -1) /*cannot open file*/
 		return (0);
+
 	buff = malloc(sizeof(char) * letters);
 	if (buff == NULL)
-	{
-		close(fd);
 		return (0);
-	}
+
 	len_read = read(fd, buff, letters);
-	close(fd);
-	if (len_read == -1)
-	{
-		free(buff);
-		return (0);
-	}
 	len_write = write(STDOUT_FILENO, buff, len_read);
+
+	close(fd);
 	free(buff);
-	if (len_read != len_write)
-		return (0);
+
 	return (len_write);
 }
