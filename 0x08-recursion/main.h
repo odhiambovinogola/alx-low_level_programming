@@ -12,7 +12,6 @@ int _sqrt_check(int n, int i);
 int is_prime_number(int n);
 int is_prime_recursive(int n, int i);
 int is_palindrome(char *s);
-int my_pal(char *s, int l);
 int wildcmp(char *s1, char *s2);
 
 #endif
